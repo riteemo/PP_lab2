@@ -2,11 +2,11 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class MeasureWindow(object):
+
     def __init__(self, measure: str, measure_list: list[str]):
         super().__init__()
         self.measure = measure
         self.measure_list = measure_list
-
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(421, 378)
@@ -14,26 +14,21 @@ class MeasureWindow(object):
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.gridLayout = QtWidgets.QGridLayout()
         self.gridLayout.setObjectName("gridLayout")
-        self.label_2 = QtWidgets.QLabel(Form)
-        font = QtGui.QFont()
-        font.setFamily("Fixedsys")
-        font.setPointSize(12)
-        self.label_2.setFont(font)
-        self.label_2.setObjectName("label_2")
-        self.gridLayout.addWidget(self.label_2, 1, 0, 1, 1)
-        self.lineEdit_2 = QtWidgets.QLineEdit(Form)
-        self.lineEdit_2.setObjectName("lineEdit_2")
-        self.gridLayout.addWidget(self.lineEdit_2, 2, 1, 1, 1)
-        self.lineEdit = QtWidgets.QLineEdit(Form)
-        self.lineEdit.setObjectName("lineEdit")
-        self.gridLayout.addWidget(self.lineEdit, 1, 1, 1, 1)
-        self.label_3 = QtWidgets.QLabel(Form)
-        font = QtGui.QFont()
-        font.setFamily("Fixedsys")
-        font.setPointSize(12)
-        self.label_3.setFont(font)
-        self.label_3.setObjectName("label_3")
-        self.gridLayout.addWidget(self.label_3, 2, 0, 1, 1)
+
+        for measure_unit in range(len(self.measure_list)):
+            # Автоматическое создание лейблов и инпутов
+            self.__dict__[f"label_{measure_unit + 2}"] = QtWidgets.QLabel(Form)
+            font = QtGui.QFont()
+            font.setFamily("Fixedsys")
+            font.setPointSize(12)
+            self.__dict__[f"label_{measure_unit + 2}"].setFont(font)
+            self.__dict__[f"label_{measure_unit + 2}"].setObjectName(f"label_{measure_unit + 2}")
+            self.gridLayout.addWidget(self.__dict__[f"label_{measure_unit + 2}"], measure_unit + 1, 0, 1, 1)
+
+            self.__dict__[f"lineEdit_{measure_unit}"] = QtWidgets.QLineEdit(Form)
+            self.__dict__[f"lineEdit_{measure_unit}"].setObjectName(f"lineEdit_{measure_unit}")
+            self.gridLayout.addWidget(self.__dict__[f"lineEdit_{measure_unit}"], measure_unit + 1, 1, 1, 1)
+
         self.label = QtWidgets.QLabel(Form)
         font = QtGui.QFont()
         font.setFamily("Fixedsys")
@@ -50,17 +45,8 @@ class MeasureWindow(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
-        self.label_2.setText(_translate("Form", "Degree"))
-        self.label_3.setText(_translate("Form", "Radian"))
-        self.label.setText(_translate("Form", "Angle"))
+        Form.setWindowTitle(_translate("Form", self.measure.capitalize() + " converter"))
+        for measure_unit in range(len(self.measure_list)):
+            self.__dict__[f"label_{measure_unit + 2}"].setText(_translate("Form", f"{self.measure_list[measure_unit].replace('_', ' ').capitalize()} "))
 
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Form = QtWidgets.QWidget()
-    ui = MeasureWindow()
-    ui.setupUi(Form)
-    Form.show()
-    sys.exit(app.exec_())
+        self.label.setText(_translate("Form", self.measure.capitalize()))
