@@ -7,6 +7,8 @@ class MeasureWindow(object):
         super().__init__()
         self.measure = measure
         self.measure_list = measure_list
+        self.connections = {}  # {lineEdit_5: cubic football fields}
+
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(421, 378)
@@ -29,6 +31,17 @@ class MeasureWindow(object):
             self.__dict__[f"lineEdit_{measure_unit}"].setObjectName(f"lineEdit_{measure_unit}")
             self.gridLayout.addWidget(self.__dict__[f"lineEdit_{measure_unit}"], measure_unit + 1, 1, 1, 1)
 
+            def get_field(label):
+                def inner():
+                    print(label)
+                return inner
+
+            self.connections[f"lineEdit_{measure_unit}"] = self.measure_list[measure_unit]
+            (self.__dict__[f"lineEdit_{measure_unit}"]
+             .textChanged
+             .connect(get_field(self.connections[f"lineEdit_{measure_unit}"])))
+
+
         self.label = QtWidgets.QLabel(Form)
         font = QtGui.QFont()
         font.setFamily("Fixedsys")
@@ -39,7 +52,6 @@ class MeasureWindow(object):
         self.label.setObjectName("label")
         self.gridLayout.addWidget(self.label, 0, 0, 1, 2)
         self.gridLayout_2.addLayout(self.gridLayout, 0, 0, 1, 1)
-
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 

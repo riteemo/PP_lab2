@@ -1,10 +1,11 @@
+import math
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel
 from popUp import MeasureWindow
 
-
 class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
+    def __init__(self):
         self.measures = {
             "time": ["nanoseconds", "microseconds", "milliseconds", "seconds", "minutes", "hours", "days"],
             "mass": ["gram", "kilogram", "centner", "ton", "ounce", "lb"],
@@ -16,7 +17,65 @@ class Ui_MainWindow(object):
             "angle": ["degree", "radian"]
         }
         self.new_window = None
+        self.converter = {
+            "time": {
+                "seconds": lambda x: x,
+                "nanoseconds": lambda x: x * 10**9,
+                "microseconds": lambda x: x * 10**6,
+                "milliseconds": lambda x: x * 10**3,
+                "minutes": lambda x: x / 60,
+                "hours": lambda x: x / 3600,
+                "days": lambda x: x / (3600 * 24)
+            },
+            "mass": {
+                "gram": lambda x: x,
+                "kilogram": lambda x: x / 1000,
+                "centner": lambda x: x / 10**5,
+                "ton": lambda x: x / 10**6,
+                "ounce": lambda x: x / 28.3,
+                "lb": lambda x: x / 483.6
+            },
+            "length": {
+                "millimeter": lambda x: x * 1000,
+                "centimeter": lambda x: x * 100 ,
+                "meter": lambda x: x,
+                "kilometer": lambda x: x / 1000,
+                "inch": lambda x: x * 39.37,
+                "foot": lambda x: x * 3.28,
+                "mile": lambda x: x / 1609.34,
+                "yard": lambda x: x * 1.09
+            },
+            "velocity": {
+                "meter_per_second": lambda x: x,
+                "kilometer_per_hour": lambda x: x * 3.6,
+                "mile_per_hour": lambda x: x * 2.24
+            },
+            "square": {
+                "square_meter": lambda x: x,
+                "hectare": lambda x: x / 10**4,
+                "square_kilometer": lambda x: x / 10**6,
+                "acre": lambda x: x / 4046.86,
+                "square_foot": lambda x: x * 10.76
+            },
+            "volume": {
+                "cubic_millimeter": lambda x: 10**9,
+                "cubic_centimeter": lambda x: 10**6,
+                "cubic_meter": lambda x: x,
+                "milliliter": lambda x: x * 10**6,
+                "liter": lambda x: x * 1000
+            },
+            "temperature": {
+                "Celsius": lambda x: x,
+                "Fahrenheit": lambda x: (x * 9 / 5) + 32,
+                "Kelvin": lambda x: x + 273.15
+            },
+            "angle": {
+                "degree": lambda x: x,
+                "radian": lambda x: x * 180 / math.pi
+            }
+        }
 
+    def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(885, 504)
         palette = QtGui.QPalette()
@@ -260,7 +319,7 @@ class Ui_MainWindow(object):
         print(btn_text, self.measures[btn_text])
         window = MeasureWindow(btn_text, self.measures[btn_text])
         self.new_window = QtWidgets.QWidget()
-        window.setupUi(self.new_window)
+        window.setupUi(self.new_window) # создание окна self.new_window на основе класса MeasureWindow
         self.new_window.show()
 
     def retranslateUi(self, MainWindow):
