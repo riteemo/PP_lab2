@@ -21,31 +21,31 @@ class Ui_MainWindow(object):
         #  Словарь, содержащий функции для перевода единиц измерения, 1 переводит из СИ в единицу измерения, 2 наоборот
         self.converter = {
             "time": {
-                "seconds": (lambda x: x, lambda x: x),
-                "nanoseconds": (lambda x: x * 10 ** 9, lambda x: x / 10 ** 9),
-                "microseconds": (lambda x: x * 10 ** 6, lambda x: x / 10 ** 6),
-                "milliseconds": (lambda x: x * 10 ** 3, lambda x: x / 10 ** 3),
-                "minutes": (lambda x: x / 60, lambda x: x * 60),
-                "hours": (lambda x: x / 3600, lambda x: x * 3600),
-                "days": (lambda x: x / (3600 * 24), lambda x: x * (3600 * 24))
+                "seconds": (lambda x: abs(x), lambda x: abs(x)),
+                "nanoseconds": (lambda x: abs(x * 10 ** 9), lambda x: abs(x / 10 ** 9)),
+                "microseconds": (lambda x: abs(x * 10 ** 6), lambda x: abs(x / 10 ** 6)),
+                "milliseconds": (lambda x: abs(x * 10 ** 3), lambda x: abs(x / 10 ** 3)),
+                "minutes": (lambda x: abs(x / 60), lambda x: abs(x * 60)),
+                "hours": (lambda x: abs(x / 3600), lambda x: abs(x * 3600)),
+                "days": (lambda x: abs(x / (3600 * 24)), lambda x: abs(x * (3600 * 24)))
             },
             "mass": {
-                "gram": (lambda x: x, lambda x: x),
-                "kilogram": (lambda x: x / 1000, lambda x: x * 1000),
-                "centner": (lambda x: x / 10 ** 5, lambda x: x * 10 ** 5),
-                "ton": (lambda x: x / 10 ** 6, lambda x: x * 10 ** 6),
-                "ounce": (lambda x: x / 28.3, lambda x: x * 28.3),
-                "lb": (lambda x: x / 483.6, lambda x: x * 28.3)
+                "gram": (lambda x: abs(x), lambda x: abs(x)),
+                "kilogram": (lambda x: abs(x / 1000), lambda x: abs(x * 1000)),
+                "centner": (lambda x: abs(x / 10 ** 5), lambda x: abs(x * 10 ** 5)),
+                "ton": (lambda x: abs(x / 10 ** 6), lambda x: abs(x * 10 ** 6)),
+                "ounce": (lambda x: abs(x / 28.3), lambda x: abs(x * 28.3)),
+                "lb": (lambda x: abs(x / 483.6), lambda x: abs(x * 28.3))
             },
             "length": {
-                "millimeter": (lambda x: x * 1000, lambda x: x / 1000),
-                "centimeter": (lambda x: x * 100, lambda x: x / 100),
-                "meter": (lambda x: x, lambda x: x),
-                "kilometer": (lambda x: x / 1000, lambda x: x * 1000),
-                "inch": (lambda x: x * 39.37, lambda x: x / 39.37),
-                "foot": (lambda x: x * 3.28, lambda x: x / 3.28),
-                "mile": (lambda x: x / 1609.34, lambda x: x * 1609.34),
-                "yard": (lambda x: x * 1.09, lambda x: x / 1.09)
+                "millimeter": (lambda x: abs(x * 1000), lambda x: abs(x / 1000)),
+                "centimeter": (lambda x: abs(x * 100), lambda x: abs(x / 100)),
+                "meter": (lambda x: abs(x), lambda x: abs(x)),
+                "kilometer": (lambda x: abs(x / 1000), lambda x: abs(x * 1000)),
+                "inch": (lambda x: abs(x * 39.37), lambda x: abs(x / 39.37)),
+                "foot": (lambda x: abs(x * 3.28), lambda x: abs(x / 3.28)),
+                "mile": (lambda x: abs(x / 1609.34), lambda x: abs(x * 1609.34)),
+                "yard": (lambda x: abs(x * 1.09), lambda x: abs(x / 1.09))
             },
             "velocity": {
                 "meter_per_second": (lambda x: x, lambda x: x),
@@ -53,18 +53,18 @@ class Ui_MainWindow(object):
                 "mile_per_hour": (lambda x: x * 2.24, lambda x: x / 2.24)
             },
             "square": {
-                "square_meter": (lambda x: x, lambda x: x),
-                "hectare": (lambda x: x / 10 ** 4, lambda x: x * 10 ** 4),
-                "square_kilometer": (lambda x: x / 10 ** 6, lambda x: x * 10 ** 6),
-                "acre": (lambda x: x / 4046.86, lambda x: x * 4046.86),
-                "square_foot": (lambda x: x * 10.76, lambda x: x / 10.76)
+                "square_meter": (lambda x: abs(x), lambda x: abs(x)),
+                "hectare": (lambda x: abs(x / 10 ** 4), lambda x: abs(x * 10 ** 4)),
+                "square_kilometer": (lambda x: abs(x / 10 ** 6), lambda x: abs(x * 10 ** 6)),
+                "acre": (lambda x: abs(x / 4046.86), lambda x: abs(x * 4046.86)),
+                "square_foot": (lambda x: abs(x * 10.76), lambda x: abs(x / 10.76))
             },
             "volume": {
-                "cubic_millimeter": (lambda x: x * 10 ** 9, lambda x: x / 10 ** 9),
-                "cubic_centimeter": (lambda x: x * 10 ** 6, lambda x: x / 10 ** 6),
-                "cubic_meter": (lambda x: x, lambda x: x),
-                "milliliter": (lambda x: x * 10 ** 6, lambda x: x / 10 ** 6),
-                "liter": (lambda x: x * 1000, lambda x: x / 1000)
+                "cubic_millimeter": (lambda x: abs(x * 10 ** 9), lambda x: abs(x / 10 ** 9)),
+                "cubic_centimeter": (lambda x: abs(x * 10 ** 6), lambda x: abs(x / 10 ** 6)),
+                "cubic_meter": (lambda x: abs(x), lambda x: abs(x)),
+                "milliliter": (lambda x: abs(x * 10 ** 6), lambda x: abs(x / 10 ** 6)),
+                "liter": (lambda x: abs(x * 1000), lambda x: abs(x / 1000))
             },
             "temperature": {
                 "Celsius": (lambda x: x, lambda x: x),
