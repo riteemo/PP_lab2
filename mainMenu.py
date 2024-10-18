@@ -1,11 +1,12 @@
 import math
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel
 from popUp import MeasureWindow
 
+
+#  Класс, описывающий главное окно
 class Ui_MainWindow(object):
     def __init__(self):
+        #  Словарь вида: физическая величина: единицы измерения
         self.measures = {
             "time": ["nanoseconds", "microseconds", "milliseconds", "seconds", "minutes", "hours", "days"],
             "mass": ["gram", "kilogram", "centner", "ton", "ounce", "lb"],
@@ -16,65 +17,67 @@ class Ui_MainWindow(object):
             "temperature": ["Celsius", "Fahrenheit", "Kelvin"],
             "angle": ["degree", "radian"]
         }
-        self.new_window = None
+        self.new_window = None #  объект нового окна
+        #  Словарь, содержащий функции для перевода единиц измерения, 1 переводит из СИ в единицу измерения, 2 наоборот
         self.converter = {
             "time": {
-                "seconds": lambda x: x,
-                "nanoseconds": lambda x: x * 10**9,
-                "microseconds": lambda x: x * 10**6,
-                "milliseconds": lambda x: x * 10**3,
-                "minutes": lambda x: x / 60,
-                "hours": lambda x: x / 3600,
-                "days": lambda x: x / (3600 * 24)
+                "seconds": (lambda x: x, lambda x: x),
+                "nanoseconds": (lambda x: x * 10 ** 9, lambda x: x / 10 ** 9),
+                "microseconds": (lambda x: x * 10 ** 6, lambda x: x / 10 ** 6),
+                "milliseconds": (lambda x: x * 10 ** 3, lambda x: x / 10 ** 3),
+                "minutes": (lambda x: x / 60, lambda x: x * 60),
+                "hours": (lambda x: x / 3600, lambda x: x * 3600),
+                "days": (lambda x: x / (3600 * 24), lambda x: x * (3600 * 24))
             },
             "mass": {
-                "gram": lambda x: x,
-                "kilogram": lambda x: x / 1000,
-                "centner": lambda x: x / 10**5,
-                "ton": lambda x: x / 10**6,
-                "ounce": lambda x: x / 28.3,
-                "lb": lambda x: x / 483.6
+                "gram": (lambda x: x, lambda x: x),
+                "kilogram": (lambda x: x / 1000, lambda x: x * 1000),
+                "centner": (lambda x: x / 10 ** 5, lambda x: x * 10 ** 5),
+                "ton": (lambda x: x / 10 ** 6, lambda x: x * 10 ** 6),
+                "ounce": (lambda x: x / 28.3, lambda x: x * 28.3),
+                "lb": (lambda x: x / 483.6, lambda x: x * 28.3)
             },
             "length": {
-                "millimeter": lambda x: x * 1000,
-                "centimeter": lambda x: x * 100 ,
-                "meter": lambda x: x,
-                "kilometer": lambda x: x / 1000,
-                "inch": lambda x: x * 39.37,
-                "foot": lambda x: x * 3.28,
-                "mile": lambda x: x / 1609.34,
-                "yard": lambda x: x * 1.09
+                "millimeter": (lambda x: x * 1000, lambda x: x / 1000),
+                "centimeter": (lambda x: x * 100, lambda x: x / 100),
+                "meter": (lambda x: x, lambda x: x),
+                "kilometer": (lambda x: x / 1000, lambda x: x * 1000),
+                "inch": (lambda x: x * 39.37, lambda x: x / 39.37),
+                "foot": (lambda x: x * 3.28, lambda x: x / 3.28),
+                "mile": (lambda x: x / 1609.34, lambda x: x * 1609.34),
+                "yard": (lambda x: x * 1.09, lambda x: x / 1.09)
             },
             "velocity": {
-                "meter_per_second": lambda x: x,
-                "kilometer_per_hour": lambda x: x * 3.6,
-                "mile_per_hour": lambda x: x * 2.24
+                "meter_per_second": (lambda x: x, lambda x: x),
+                "kilometer_per_hour": (lambda x: x * 3.6, lambda x: x / 3.6),
+                "mile_per_hour": (lambda x: x * 2.24, lambda x: x / 2.24)
             },
             "square": {
-                "square_meter": lambda x: x,
-                "hectare": lambda x: x / 10**4,
-                "square_kilometer": lambda x: x / 10**6,
-                "acre": lambda x: x / 4046.86,
-                "square_foot": lambda x: x * 10.76
+                "square_meter": (lambda x: x, lambda x: x),
+                "hectare": (lambda x: x / 10 ** 4, lambda x: x * 10 ** 4),
+                "square_kilometer": (lambda x: x / 10 ** 6, lambda x: x * 10 ** 6),
+                "acre": (lambda x: x / 4046.86, lambda x: x * 4046.86),
+                "square_foot": (lambda x: x * 10.76, lambda x: x / 10.76)
             },
             "volume": {
-                "cubic_millimeter": lambda x: 10**9,
-                "cubic_centimeter": lambda x: 10**6,
-                "cubic_meter": lambda x: x,
-                "milliliter": lambda x: x * 10**6,
-                "liter": lambda x: x * 1000
+                "cubic_millimeter": (lambda x: x * 10 ** 9, lambda x: x / 10 ** 9),
+                "cubic_centimeter": (lambda x: x * 10 ** 6, lambda x: x / 10 ** 6),
+                "cubic_meter": (lambda x: x, lambda x: x),
+                "milliliter": (lambda x: x * 10 ** 6, lambda x: x / 10 ** 6),
+                "liter": (lambda x: x * 1000, lambda x: x / 1000)
             },
             "temperature": {
-                "Celsius": lambda x: x,
-                "Fahrenheit": lambda x: (x * 9 / 5) + 32,
-                "Kelvin": lambda x: x + 273.15
+                "Celsius": (lambda x: x, lambda x: x),
+                "Fahrenheit": (lambda x: (x * 9 / 5) + 32, lambda x: (x - 32) * 5 / 9),
+                "Kelvin": (lambda x: x + 273.15, lambda x: x - 273.15)
             },
             "angle": {
-                "degree": lambda x: x,
-                "radian": lambda x: x * 180 / math.pi
+                "degree": (lambda x: x, lambda x: x),
+                "radian": (lambda x: x * math.pi / 180, lambda x: x * 180 / math.pi)
             }
         }
 
+    #  Создание главного окна (меню)
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(885, 504)
@@ -315,9 +318,10 @@ class Ui_MainWindow(object):
         self.pushButton_7.clicked.connect(lambda: self.print_info("angle"))
         self.pushButton_8.clicked.connect(lambda: self.print_info("square"))
 
+    #  Функция, которая вызывается при нажатии на одну из кнопок. Создаёт новое окно на основе названия величины,
+    #  единиц измерения и функций для перевода
     def print_info(self, btn_text: str):
-        print(btn_text, self.measures[btn_text])
-        window = MeasureWindow(btn_text, self.measures[btn_text])
+        window = MeasureWindow(btn_text, self.measures[btn_text], self.converter[btn_text])
         self.new_window = QtWidgets.QWidget()
         window.setupUi(self.new_window) # создание окна self.new_window на основе класса MeasureWindow
         self.new_window.show()
